@@ -1,0 +1,50 @@
+一、错误信息
+
+wbf@wangbaofeng MINGW64 /e/gitProjects/myDemoPro (master)
+$ git push origin master
+To git@github.com:zuiwangzuo/myDemoPro.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@github.com:zuiwangzuo/myDemoPro.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+ 
+
+二、问题分析
+
+先到github上看看远程repository下到底有啥东西，发现目标库是空的。
+
+但是有一个README.md文件（本地代码中没有），而出现错误的原因是github中的README.md文件不在本地代码目录中。
+
+也就是说我们需要先将远程代码库中的任何文件先pull到本地代码库中，才能push新的代码到github代码库中。
+
+三、解决问题
+
+1. 将远程代码库中的代码pull到本地代码库，并且执行合并merge：
+
+$ git pull --rebase origin master
+warning: no common commits
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 3 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:zuiwangzuo/myDemoPro
+ * branch            master     -> FETCH_HEAD
+ * [new branch]      master     -> origin/master
+First, rewinding head to replay your work on top of it...
+Applying: 提交初始代码。
+
+2. 再次push代码：
+
+$ git push origin master
+Counting objects: 20, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (12/12), done.
+Writing objects: 100% (20/20), 2.51 KiB | 0 bytes/s, done.
+Total 20 (delta 0), reused 0 (delta 0)
+To git@github.com:zuiwangzuo/myDemoPro.git
+   8227f7c..aff8663  master -> master
+
+
+我们看到本地代码已经成功的提交到远程代码中，至此问题解决。
